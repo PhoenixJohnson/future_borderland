@@ -1,16 +1,13 @@
 package com.future.borderland.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
 import java.util.Date;
 
 /**
@@ -19,27 +16,24 @@ import java.util.Date;
 @Setter
 @Getter
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@JsonSerialize(include = JsonSerialize.Inclusion.NON_NULL)
-@EntityListeners(AuditingEntityListener.class)
-@Table(name = "FB_USER", indexes = {
-        @Index(name = "fb_member_index", columnList = "memberId"),
+@Table(schema="future_borderland", name = "Member", indexes = {
+        @Index(name = "fb_member_id_index", columnList = "memberId"),
         @Index(name = "fb_member_name_index", columnList = "memberName"),
         @Index(name = "fb_member_mail_address_index", columnList = "memberMailAddress")
 })
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class Member {
     @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "memberId_seq")
-    @SequenceGenerator(name = "memberId_seq", allocationSize = 1, initialValue = 5000000, sequenceName = "memberId_seq")
-    @Column(nullable = false, insertable = false, updatable = false)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "MemberId_seq")
+    @SequenceGenerator(name = "MemberId_seq", allocationSize = 1, initialValue = 5000000, sequenceName = "MemberId_seq")
+    @Column( nullable = false, insertable = false, updatable = false)
     private Long memberId;
 
-    @Column(nullable = false)
-    private Boolean isGuest;
+    @Min(0)
+    @Max(2)
+    @Column(columnDefinition = "TINYINT(1) default '0'")
+    private int active;
 
-    @Column(length = 512)
+    @Column(unique = true, length = 512)
     private String memberName;
 
     @Column(length = 512)
@@ -51,7 +45,7 @@ public class Member {
     @Column(length = 4096)
     private String testResult;
 
-    @Column(precision = 4, scale = 2)
+    @Column( precision = 4, scale = 2)
     private Double rankScore;
 
     @Temporal(TemporalType.TIMESTAMP)

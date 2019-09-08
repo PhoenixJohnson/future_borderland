@@ -27,9 +27,9 @@ public class MemberController {
     @RequestMapping(value = "/pre-check", method = RequestMethod.POST, produces = "application/JSON", consumes = "application/JSON")
     public ResponseEntity<CommonResponse> preCheckMember(@RequestBody MemberResourceRequest request) {
         try {
-            return new ResponseEntity<>(ResponseBuilder.buildResponseObj(memberFactoryManager.preCheckMember(request), true), HttpStatus.OK);
+            return new ResponseEntity<CommonResponse>(ResponseBuilder.buildResponseObj(memberFactoryManager.preCheckMember(request), true), HttpStatus.OK);
         } catch (Exception e) {
-            return new ResponseEntity<>(ResponseBuilder.buildShortMessageResponse(e.getMessage(), false), HttpStatus.INTERNAL_SERVER_ERROR);
+            return new ResponseEntity<CommonResponse>(ResponseBuilder.buildShortMessageResponse(e.getMessage(), false), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
